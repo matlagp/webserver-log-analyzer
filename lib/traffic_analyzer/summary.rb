@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'address_views_map'
+require_relative 'log_parsing_error'
+
 module TrafficAnalyzer
   SiteViews = Struct.new(:site, :views)
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
 require 'traffic_analyzer/summary'
 require 'traffic_analyzer/log_parsing_error'
 

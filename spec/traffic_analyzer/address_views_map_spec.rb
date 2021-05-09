@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
 require 'traffic_analyzer/address_views_map'
 
 describe TrafficAnalyzer::AddressViewsMap do
