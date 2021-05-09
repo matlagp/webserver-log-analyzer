@@ -1,29 +1,36 @@
+# frozen_string_literal: true
+
 module TrafficAnalyzer
+  SiteViews = Struct.new(:site, :views)
+
+  # Parses a webserver log to an AddressViewsMap object for
+  # each site in that log. Allows for calculating views and
+  # unique views for all sites by using AddressViewsMap for
+  # each site.
   class Summary
     def initialize(log)
       @log = log
     end
 
     def views
-      sites_with_views.map { |site, counter| SiteViewsCounter.new(site, counter.views) }
-                      .sort_by(&:views)
-                      .reverse
+      sites_with_visitors.map { |site, addresses_with_views| SiteViews.new(site, addresses_with_views.views) }
+                         .sort_by(&:views)
+                         .reverse
     end
 
     def unique_views
-      sites_with_views.map { |site, counter| SiteViewsCounter.new(site, counter.unique_views) }
-                      .sort_by(&:views)
-                      .reverse
+      sites_with_visitors.map { |site, addresses_with_views| SiteViews.new(site, addresses_with_views.unique_views) }
+                         .sort_by(&:views)
+                         .reverse
     end
 
     private
 
-    def sites_with_views
-      accumulator = Hash.new { |h, k| h[k] = AddressViewsCounter.new }
-      @sites_with_views ||= @log.each_line.inject(accumulator) do |acc, line|
+    def sites_with_visitors
+      accumulator = Hash.new { |h, k| h[k] = AddressViewsMap.new }
+      @sites_with_visitors ||= @log.each_line.with_object(accumulator) do |line, acc|
         site, address = parse_line(line)
         acc[site].add_view(address)
-        acc
       end
     end
 

@@ -1,5 +1,13 @@
+# frozen_string_literal: true
+
 module TrafficAnalyzer
-  class AddressViewsCounter
+  # Holds mappings between addresses visiting one site and
+  # number of their views of that site, e.g.:
+  # { '123.123.123.123': 5, 212.212.212.212: 2 }
+  #
+  # This structure allows to easily count up views and
+  # unique views for a given site.
+  class AddressViewsMap
     include Enumerable
 
     def initialize
@@ -15,7 +23,7 @@ module TrafficAnalyzer
     end
 
     def views
-      @addresses_with_views.each_value.inject(0) { |sum, address_views| sum + address_views}
+      @addresses_with_views.each_value.inject(0) { |sum, address_views| sum + address_views }
     end
 
     def unique_views
